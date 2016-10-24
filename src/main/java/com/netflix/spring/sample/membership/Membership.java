@@ -29,13 +29,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.eureka.EurekaStatusChangedEvent;
-import org.springframework.cloud.netflix.metrics.spectator.EnableSpectator;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+//import org.springframework.cloud.netflix.metrics.spectator.EnableSpectator;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
-import org.springframework.integration.annotation.IntegrationComponentScan;
-import org.springframework.integration.annotation.MessagingGateway;
-import org.springframework.integration.channel.DirectChannel;
+//import org.springframework.integration.annotation.IntegrationComponentScan;
+//import org.springframework.integration.annotation.MessagingGateway;
+/**import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.config.EnableIntegrationManagement;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
@@ -44,18 +44,25 @@ import org.springframework.integration.dsl.core.Pollers;
 import org.springframework.integration.endpoint.MethodInvokingMessageSource;
 import org.springframework.integration.support.management.DefaultMetricsFactory;
 import org.springframework.integration.support.management.MetricsFactory;
-import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageChannel;*/
 import org.springframework.web.bind.annotation.*;
 
 import com.google.common.collect.ImmutableMap;
-import com.netflix.appinfo.InstanceInfo.InstanceStatus;
+import com.netflix.appinfo.InstanceInfo;
 
 @SpringBootApplication
 @EnableEurekaClient
-@EnableSpectator
+//@EnableSpectator
 public class Membership {
     public static void main(String[] args) {
-        new SpringApplicationBuilder(Membership.class, IntegrationConfig.class).web(true).run(args);
+        new SpringApplicationBuilder(Membership.class).web(true).run(args);
+    }
+	
+	@EventListener
+    public void onEurekaStatusDown(EurekaStatusChangedEvent event) {
+        if(event.getStatus() == InstanceInfo.InstanceStatus.DOWN || event.getStatus() == InstanceInfo.InstanceStatus.OUT_OF_SERVICE) {
+            System.out.println("Stop listening to queues and such...");
+        }
     }
 }
 
@@ -100,7 +107,7 @@ class MembershipController {
 }
 
 
-@Configuration
+/**@Configuration
 @IntegrationComponentScan(basePackageClasses=ControlBusGateway.class)
 @EnableIntegrationManagement(countsEnabled = "*", statsEnabled = "*", metricsFactory = "metricsFactory")
 class IntegrationConfig {
@@ -172,4 +179,4 @@ class IntegrationConfig {
 @MessagingGateway(defaultRequestChannel = "control")
 interface ControlBusGateway {
     void send(String command);
-}
+}*/
